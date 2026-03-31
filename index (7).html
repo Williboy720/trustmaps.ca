@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trustmaps — Activité des contracteurs en direct au Québec</title>
+<meta name="description" content="Trustmaps affiche l'activité réelle des contracteurs vérifiés au Québec. Voyez qui travaille près de chez vous en ce moment.">
+<link rel="canonical" href="https://trustmaps.ca/">
+<meta property="og:title" content="Trustmaps — Activité des contracteurs en direct au Québec">
+<meta property="og:description" content="Voyez qui travaille près de chez vous en ce moment. Contracteurs vérifiés au Québec.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://trustmaps.ca/">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Trustmaps",
+  "url": "https://trustmaps.ca/",
+  "description": "Plateforme de vérification d'activité des contracteurs au Québec"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#16a34a;--green-light:#dcfce7;--green-dark:#15803d;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;
+  --gray-400:#9ca3af;--gray-500:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --white:#ffffff;
+}
+body{font-family:'DM Sans',sans-serif;background:#0f1712;color:#fff;min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.logo-dot-wrap{width:30px;height:30px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.logo-pulse{width:10px;height:10px;background:white;border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.7;transform:scale(1.2)}}
+.logo-name{font-size:16px;font-weight:700;letter-spacing:0.5px;}
+.nav-badge{font-size:11px;color:var(--green);border:1px solid rgba(22,163,74,0.3);border-radius:4px;padding:3px 10px;font-weight:600;}
+
+/* HERO */
+.hero{max-width:860px;margin:0 auto;padding:100px 40px 80px;text-align:center;}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--green);border:1px solid rgba(22,163,74,0.3);border-radius:100px;padding:5px 14px;margin-bottom:32px;font-weight:600;letter-spacing:0.5px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
+h1{font-size:clamp(36px,5vw,62px);font-weight:700;line-height:1.1;letter-spacing:-1.5px;margin-bottom:24px;color:#fff;}
+h1 span{color:var(--green);}
+.hero-sub{font-size:18px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:560px;margin:0 auto 48px;}
+
+/* STATS ROW */
+.stats{display:flex;align-items:center;justify-content:center;gap:48px;margin-bottom:80px;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat-num{font-size:32px;font-weight:700;color:#fff;}
+.stat-label{font-size:13px;color:rgba(255,255,255,0.4);margin-top:4px;}
+
+/* MAP PREVIEW */
+.map-preview{position:relative;max-width:700px;margin:0 auto 80px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;padding:40px;}
+.map-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;opacity:0.6;}
+.map-pin{display:flex;align-items:center;justify-content:center;}
+.pin{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;position:relative;}
+.pin.glow{background:var(--green);box-shadow:0 0 0 6px rgba(22,163,74,0.2),0 0 20px rgba(22,163,74,0.4);animation:glow-pulse 2s infinite;}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 0 6px rgba(22,163,74,0.2),0 0 20px rgba(22,163,74,0.4)}50%{box-shadow:0 0 0 10px rgba(22,163,74,0.1),0 0 30px rgba(22,163,74,0.3)}}
+.pin.active{background:#1d6535;}
+.pin.fading{background:#2a2a2a;color:rgba(255,255,255,0.3);}
+.map-label{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,0.3);}
+
+/* TRADES */
+.trades{max-width:860px;margin:0 auto 80px;padding:0 40px;}
+.trades-title{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:24px;font-weight:600;}
+.trades-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.trade-pill{font-size:13px;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:7px 16px;font-weight:500;}
+.trade-pill.active{color:var(--green);border-color:rgba(22,163,74,0.4);background:rgba(22,163,74,0.05);}
+
+/* HOW */
+.how{max-width:860px;margin:0 auto 80px;padding:0 40px;}
+.how-title{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:40px;font-weight:600;}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.step{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:28px 24px;}
+.step-num{font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:14px;}
+.step-title{font-size:15px;font-weight:600;color:#fff;margin-bottom:8px;}
+.step-text{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;}
+
+/* CTA */
+.cta-section{text-align:center;padding:0 40px 100px;max-width:600px;margin:0 auto;}
+.cta-title{font-size:28px;font-weight:700;margin-bottom:16px;letter-spacing:-0.5px;}
+.cta-sub{font-size:15px;color:rgba(255,255,255,0.4);margin-bottom:32px;line-height:1.6;}
+.cta-btn{display:inline-block;background:var(--green);color:white;font-size:15px;font-weight:600;padding:14px 32px;border-radius:8px;text-decoration:none;transition:background 0.15s;}
+.cta-btn:hover{background:var(--green-dark);}
+
+/* FOOTER */
+footer{border-top:1px solid rgba(255,255,255,0.06);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;}
+.footer-logo{font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;}
+.footer-links a:hover{color:rgba(255,255,255,0.6);}
+
+@media(max-width:600px){
+  nav{padding:16px 20px;}
+  .hero{padding:60px 20px 60px;}
+  .stats{gap:28px;}
+  .steps{grid-template-columns:1fr;}
+  .trades,.how,.cta-section{padding-left:20px;padding-right:20px;}
+  footer{flex-direction:column;gap:16px;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="logo-dot-wrap"><div class="logo-pulse"></div></div>
+    <span class="logo-name">Trustmaps</span>
+  </div>
+  <div class="nav-badge">Québec · Beta</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag"><div class="live-dot"></div>Activité en direct</div>
+  <h1>Voyez qui travaille<br><span>près de chez vous</span></h1>
+  <p class="hero-sub">Trustmaps affiche l'activité réelle des contracteurs vérifiés au Québec. Pas des étoiles. De la preuve.</p>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">Vérifiés</div><div class="stat-label">Profils contracteurs</div></div>
+  <div class="stat"><div class="stat-num">Live</div><div class="stat-label">Activité en temps réel</div></div>
+  <div class="stat"><div class="stat-num">Québec</div><div class="stat-label">Région couverte</div></div>
+</div>
+
+<div class="map-preview">
+  <div class="map-grid">
+    <div class="map-pin"><div class="pin fading">A</div></div>
+    <div class="map-pin"><div class="pin active">B</div></div>
+    <div class="map-pin"><div class="pin glow">C</div></div>
+    <div class="map-pin"><div class="pin fading">D</div></div>
+    <div class="map-pin"><div class="pin active">E</div></div>
+    <div class="map-pin"><div class="pin active">F</div></div>
+    <div class="map-pin"><div class="pin fading">G</div></div>
+    <div class="map-pin"><div class="pin fading">H</div></div>
+    <div class="map-pin"><div class="pin glow">I</div></div>
+    <div class="map-pin"><div class="pin active">J</div></div>
+    <div class="map-pin"><div class="pin glow">K</div></div>
+    <div class="map-pin"><div class="pin fading">L</div></div>
+    <div class="map-pin"><div class="pin active">M</div></div>
+    <div class="map-pin"><div class="pin fading">N</div></div>
+    <div class="map-pin"><div class="pin active">O</div></div>
+  </div>
+  <div class="map-label">Vert = actif · Pulsant = très actif · Gris = inactif</div>
+</div>
+
+<div class="trades">
+  <div class="trades-title">Métiers couverts</div>
+  <div class="trades-grid">
+    <div class="trade-pill active">Couvreurs</div>
+    <div class="trade-pill active">Thermopompes</div>
+    <div class="trade-pill">Peintres</div>
+    <div class="trade-pill">Fenêtres & Portes</div>
+    <div class="trade-pill">Cuisines</div>
+    <div class="trade-pill">Électriciens</div>
+    <div class="trade-pill">Plombiers</div>
+    <div class="trade-pill">Pavage</div>
+  </div>
+</div>
+
+<div class="how">
+  <div class="how-title">Comment ça fonctionne</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Cherchez votre contracteur</div>
+      <div class="step-text">Trouvez le profil de n'importe quel contracteur au Québec sur Trustmaps.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">Voyez l'activité réelle</div>
+      <div class="step-text">Jobs complétés, avis clients confirmés, présence dans votre quartier.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">Comparez et choisissez</div>
+      <div class="step-text">Qui travaille vraiment près de chez vous en ce moment? La réponse est sur la map.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-title">Votre contracteur est sur Trustmaps</div>
+  <p class="cta-sub">Cherchez leur nom sur Google. Voyez ce que vos clients voient avant d'appeler.</p>
+  <a href="/toiture-fleur-de-lys-avis/" class="cta-btn">Voir un exemple →</a>
+</div>
+
+<footer>
+  <div class="footer-logo">Trustmaps · Québec</div>
+  <div class="footer-links">
+    <a href="/apropos">À propos</a>
+    <a href="/toiture-fleur-de-lys-avis/">Exemple de profil</a>
+  </div>
+</footer>
+
+</body>
+</html>
